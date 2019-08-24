@@ -1,0 +1,244 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>BOOKMARKKER PAGE</title>
+    <style>
+        *{            
+            box-sizing: border-box;
+            margin: 0;
+        }
+        header{
+            background: rgb(45, 223, 29);
+            text-align: center;
+            color:brown;
+            font-family: cursive;
+            font-size: 2vw;
+        }
+        .container{
+            display: grid;
+            grid-template-columns: 22% 78%;
+        }
+        .left-add{
+            background: lightgoldenrodyellow;
+            min-height: 500px;
+            height:auto;
+            width:auto;
+            padding: 5px;
+        }
+        .right-tiles{
+            min-height: 500px;
+            height:auto;
+            width:auto;
+        }
+        .geturl{
+            background: none;
+            margin: 1px;
+            padding: 4px;
+            border: 2px solid blueviolet;
+        }
+        .geturl>p{
+            text-align: center;
+            font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .sub{
+            font-family: 'Courier New', Courier, monospace;
+            background: rgb(139, 110, 235)26, 208);
+            color: firebrick;
+            font-weight: bolder;
+        }
+        .marker{
+            height: 100px;
+            width: 100px;
+            margin: 10px 10px 15px 10px;  
+            display: inline-block;
+            position: relative;  
+        }
+        #box{
+            position: absolute;
+            top:70%;
+            left:0%;
+            width:100px;
+        }
+        #box>p{
+            text-align: center;
+            justify-content: center;
+            font-family: Verdana, sans-serif;
+            overflow: hidden;
+            font-size: 12px;
+        }
+        #box1{
+            position: absolute;
+            top:30%;
+            left:35%;
+            height: 30px;
+            width: 30px;
+            border-radius: 50%;
+            background:rgb(201, 206, 209);
+        }
+        #box2{
+            position: absolute;
+            top:20%;
+            left:19%;
+            height:19px;
+        }
+        #cross{
+            position: absolute;
+            top:4%;
+            right:4%;
+           
+            visibility: hidden;
+        }
+        .marker:hover{
+            background: rgb(234, 238, 238);  
+        }
+        .marker:hover #cross{
+            visibility: visible;
+        }
+        .button{
+            height:15px;
+            width:15px;
+            padding: 0px;
+            font-size: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h2> BOOKMARK TILES</h2>
+    </header>
+    <div class="container">
+        <div class="left-add">
+            <h3 style="text-align: center; background: cornsilk;color: crimson">ADD URLS</h3>
+            <br><br>
+            <form class="geturl">
+                <p>Name of the website:</p>
+                <p><input type="text" id="webname"></p>
+                <br>
+                <p>URL of the website:</p>
+                <p><input type="text" id="weburl" placeholder="https://"></p>
+                <br>
+                <p><input type="submit" value="SUBMIT" class="sub"></p>
+            </form>
+            <br>
+        <!-- <input type="button" value="Load new document" onclick="newDoc()">--> 
+        <h4>NOTE:</h4>
+        <p>1.please add https:// before adding any website url</p><br>
+        <p>2.example--> https://www.google.com</p><br>
+        <p>3.clear the <b>browser localStorage</b> if you are using the app for first time</p><br>
+        <p>4.for further queries contact gourang</p>   
+        </div>
+        <div class="right-tiles"> 
+        </div>
+    </div>
+    <script>
+        let geturl = document.querySelector('.geturl');
+        let tiles = document.querySelector('.addtiles');
+        //form variables
+        let name = document.getElementById('webname');
+        let url = document.getElementById('weburl');
+        //right-tiles
+        let cards = document.querySelector('.right-tiles');
+        var i = 0;
+        if(localStorage.length>0){
+            for(i=0;i<localStorage.length;i++){
+                cards.innerHTML += 
+                `<div class="marker" id="${i}" name="${localStorage.key(i)}">
+                    <div id="cross">
+                        <input type="button" value="X" class="button">
+                    </div>
+                    <div id="box1">
+                    <img src="https://www.google.com/s2/favicons?domain=${localStorage.getItem(localStorage.key(i))}" 
+                    id="box2">
+                    </div>
+                    <div id="box">  
+                        <p>${localStorage.key(i)}</p>
+                    </div>
+                </div>` ;
+            }
+        }
+
+        geturl.addEventListener('submit', function(event){
+            event.preventDefault();
+
+            if(url.value=='' && name.value==''){
+                alert("please enter website name and adress");
+            }
+            else{    
+            cards.innerHTML += 
+            `<div class="marker" id="${i}" name="${name.value}" >
+                <div id="cross">
+                    <input type="button" value="X" class="button">
+                </div>
+                <div id="box1">
+                    <img src="https://www.google.com/s2/favicons?domain=${url.value}" id="box2">
+                </div>
+                <div id="box">  
+                    <p>${name.value}</p>
+                </div>
+            </div>` ; 
+            i++;
+            localStorage.setItem(name.value,url.value);
+            geturl.reset();
+            }
+        });
+
+    let tileSelector = document.querySelector('.right-tiles');
+    
+    tileSelector.addEventListener('click',function(ev){
+        //console.log(ev);
+        if(ev.toElement.className=="marker" || ev.toElement.parentElement.id=="box" || 
+        ev.toElement.parentElement.id =="box1"){
+            //console.log("got change it ");
+            let id = null;
+            if(ev.toElement.className=="marker"){
+                id=ev.toElement.id;
+                console.log(id);
+                let address = localStorage.getItem(localStorage.key(id));
+                console.log(address);
+                window.location.assign(address);
+            }
+            if(ev.toElement.parentElement.id=="box"){
+                id=ev.toElement.parentElement.parentElement.id;
+                console.log(id);
+                let address = localStorage.getItem(localStorage.key(id));
+                console.log(address);
+                window.location.assign(address);
+                
+            }
+            if(ev.toElement.parentElement.id=="box1"){
+                id=ev.toElement.parentElement.parentElement.id;
+                console.log(id);
+                let address = localStorage.getItem(localStorage.key(id));
+                console.log(address);
+                window.location.assign(address);
+            }
+           
+        }
+        if(ev.toElement.tagName=="INPUT"){
+            let mark = document.querySelectorAll('.marker');
+            mark.forEach(item=>{
+                if(item.getAttribute("id")==ev.toElement.parentElement.parentElement.id){
+                    let id = item.getAttribute("id");
+                    document.getElementById(id).remove();
+                // let ls =item.getAttribute("name");
+                    console.log(item.getAttribute("name"));
+                    localStorage.removeItem(item.getAttribute("name"));
+                    i--;
+                    
+                }
+            });
+        }
+    });
+    //ev.toElement.className  
+    //toElement.parentElement.id  
+         
+    //function newDoc() {
+    // window.location.assign("https://www.youtube.com"); 
+    //}    
+
+    </script>
+</body>
+</html>
